@@ -16,3 +16,17 @@ DETR第一个使用End to End的方式解决检测问题，解决的方法是把
 
 
 网络的主要组成是CNN和Transformer，Transformer借助第1节讲到的self-attention机制，可以显式地对一个序列中的所有elements两两之间的interactions进行建模，使得这类transformer的结构非常适合带约束的set prediction的问题。DETR的特点是：一次预测，端到端训练，set loss function和二分匹配
+
+
+总结下和原始transformer编码器不同的地方：
+
+>* 输入编码器的位置编码需要考虑2-D空间位置。
+
+>* 位置编码向量需要加入到每个Encoder Layer中。
+
+>* 在编码器内部位置编码`Positional Encoding`仅仅作用于`Query`和`Key`，即只与`Query`和`Key`相加，`Value`不做任何处理。
+
+
+
+不同的是，DETR的`Transformer Decoder`是一次性处理全部的`object queries`，即一次性输出全部的`predictions`；而不像原始的`Transformer`是`auto-regressive`的，从左到右一个词一个词地输出。这个过程我们表达为：*decodes the N objects in parallel at each decoder layer*。
+
